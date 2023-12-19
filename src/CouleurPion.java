@@ -1,0 +1,1 @@
+public enum CouleurPion {BLANC, NOIR}
