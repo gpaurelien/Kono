@@ -39,7 +39,7 @@ public class Kono {
 
         fenetrePrincipale.pack();
         fenetrePrincipale.setVisible(true);
-        joueur = CouleurPion.BLANC;
+        joueur = CouleurPion.NOIR;
         etat = 0;
     }
 }
