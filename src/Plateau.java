@@ -13,6 +13,13 @@ public class Plateau extends JPanel {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 monPlateau[i][j] = new Case(Color.GRAY, i, j, 0);
+
+				if(i < 2) {
+					monPlateau[i][j].setPion(new Pion(CouleurPion.BLANC));
+				} else {
+					monPlateau[i][j].setPion(new Pion(CouleurPion.NOIR));
+				}
+
                 this.add(monPlateau[i][j]);
             }
         }
@@ -28,7 +35,7 @@ public class Plateau extends JPanel {
 		}
     }
 
-    public boolean verifieDeplacementHorPrise(Case dep, Case arr){
+    public boolean verifieDeplacementHorPrise(Case dep, Case arr) {
 		if (arr.getPion() == null) { return false; } // Early return
 
 		int dir = (arr.getAbscisse() > dep.getAbscisse() ? 1 : -1); // Movement direction
@@ -39,7 +46,7 @@ public class Plateau extends JPanel {
 		return true;
     }
 
-    public boolean verifieDeplacementVertPrise(Case dep, Case arr){
+    public boolean verifieDeplacementVertPrise(Case dep, Case arr) {
 		if (arr.getPion() == null) { return false; }
 
 		int dir = (arr.getOrdonnee() > dep.getOrdonnee() ? 1 : -1);
@@ -76,6 +83,7 @@ public class Plateau extends JPanel {
 			changePlayer();
 			Kono.etat = 0;
 
+			// Add the deleted 'Pion' to the stock
 			return true;
 		}
 
@@ -92,8 +100,22 @@ public class Plateau extends JPanel {
 	}
     
     public boolean testDeplacement() {
-		// To complete
-		return false;
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				
+				for (int k = 0; k < 4; k++) {
+					for (int l = 0; l < 4; l++) {
+
+						if (coupValide(monPlateau[i][j], monPlateau[k][l]) != 0) {
+							return false; // The current player can move
+						}
+
+					}
+				}
+			}
+		}
+
+		return true;
     }
     
 	public void annulerCoup(Case dep, Case arr) {
