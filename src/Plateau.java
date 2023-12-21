@@ -91,7 +91,24 @@ public class Plateau extends JPanel {
     }
     
     public void jouerCoupPrise(Case dep, Case arr) {
-		// To complete
+    	if (verifieDeplacementHorPrise(dep, arr) || verifieDeplacementVertPrise(dep, arr)) {
+    		if (arr.getPion().getColor() == CouleurPion.BLANC) {
+    			Kono.stockNoir.ajouterPion(arr.getPion());
+    		} else {
+    			Kono.stockBlanc.ajouterPion(arr.getPion());
+    		}
+
+    		arr.setPion(dep.getPion());
+    		dep.setPion(null);
+
+    		if (Kono.joueur == CouleurPion.BLANC) {
+    			Kono.nbPionNoir--;
+			} else {
+    			Kono.nbPionBlanc--;
+			}
+
+    		Kono.etat = 0;
+    	}
 		Fenetre.boutonAnnuler.setEnabled(true);
     }
 

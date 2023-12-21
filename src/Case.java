@@ -57,14 +57,20 @@ public class Case extends JButton implements ActionListener {
 		occupe = true;
 
 		// Interface logic
-		if (p.getColor() == CouleurPion.BLANC) {
-			imagePion = new ImageIcon("./img/guepard.png");
-			this.setIcon(imagePion);
-		} else {
-			imagePion = new ImageIcon("./img/zebre.png");
-			this.setIcon(imagePion);
+		try {
+			if (p.getColor() == CouleurPion.BLANC) {
+				imagePion = new ImageIcon("./img/guepard.png");
+				this.setIcon(imagePion);
+			} else {
+				imagePion = new ImageIcon("./img/zebre.png");
+				this.setIcon(imagePion);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Import problem (image)");
+			JOptionPane.showMessageDialog(this, "Erreur lors du chargement de l'image du pion.", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
-    }
+	}
 
     public int getAbscisse() {
 		return abscisse;
@@ -131,7 +137,7 @@ public class Case extends JButton implements ActionListener {
 							// Si c'est un déplacement avec prise
 							Kono.caseDep.setBorder(null);
 							// 1. On déplace le pion
-							Kono.unPlateau.jouerCoupPrise(Kono.caseDep,Kono.caseArr);
+							Kono.unPlateau.jouerCoupPrise(Kono.caseDep, Kono.caseArr); // -> The game state: 0
 
 							// 2. On vérifie que le prochain joueur a plus d'un pion
 							if (Kono.nbPionNoir <= 1 || Kono.nbPionBlanc <= 1) {
@@ -140,10 +146,11 @@ public class Case extends JButton implements ActionListener {
 
 							// 3. On vérifie que le prochain joueur pourra jouer
 							if (Kono.unPlateau.testDeplacement() == false) {
-							finPartieBloque = true;
+								finPartieBloque = true;
 							}
 
 							Kono.joueur = (Kono.joueur == CouleurPion.BLANC) ? CouleurPion.NOIR : CouleurPion.BLANC;
+							// Kono.etat = 0;
 						} else {
 							// La case d'arrivée sélectionnée n'est pas valide
 							if (Kono.caseArr.getPion() != null) {

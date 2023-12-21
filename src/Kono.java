@@ -35,10 +35,8 @@ public class Kono {
         fenetrePrincipale = new Fenetre("Kono");
         fenetrePrincipale.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Window components
         fenetrePrincipale.ajouterComposants(fenetrePrincipale.getContentPane());
 
-        // Show window
         fenetrePrincipale.pack();
         fenetrePrincipale.setVisible(true);
         joueur = CouleurPion.BLANC;
