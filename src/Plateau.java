@@ -71,23 +71,14 @@ public class Plateau extends JPanel {
 		);
     }
   
-    public boolean jouerCoup(Case dep, Case arr) {
-		Fenetre.boutonAnnuler.setEnabled(true);
-		int validCoup = coupValide(dep, arr);
-
-		if (validCoup == 1) {
-			arr.setPion(dep.getPion());
-			dep.setPion(null);
-
-			// Change state value and player
-			changePlayer();
-			Kono.etat = 0;
-
-			// Add the deleted 'Pion' to the stock
-			return true;
-		}
-
-		return false;
+    public void jouerCoup(Case dep, Case arr) {
+    	if (verifieDeplacementVert(dep,arr) || verifieDeplacementHor(dep,arr)) {
+    		arr.setPion(dep.getPion());
+    		dep.setPion(null);
+    		Kono.etat = 0;
+    	}
+    	Kono.nbCoupSansPrise++;
+        Fenetre.boutonAnnuler.setEnabled(true);
     }
     
     public void jouerCoupPrise(Case dep, Case arr) {
