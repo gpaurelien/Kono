@@ -39,6 +39,12 @@ public class Plateau extends JPanel {
 		if (arr.getPion() == null) { return false; } // Early return
 
 		int dir = (arr.getAbscisse() > dep.getAbscisse() ? 1 : -1); // Movement direction
+		int newIndex = dep.getAbscisse() + dir;
+
+		if (newIndex < 0 || newIndex >= monPlateau.length) {
+			return false;
+		}
+
 		Case inter = monPlateau[dep.getOrdonnee()][dep.getAbscisse() + dir];
 
 		if (!inter.isOccupe() || inter.getPion().getColor() != Kono.joueur) { return false; }
@@ -50,6 +56,12 @@ public class Plateau extends JPanel {
 		if (arr.getPion() == null) { return false; }
 
 		int dir = (arr.getOrdonnee() > dep.getOrdonnee() ? 1 : -1);
+		int newIndex = dep.getOrdonnee() + dir;
+
+		if (newIndex < 0 || newIndex >= monPlateau.length) {
+			return false;
+		}
+		
 		Case inter = monPlateau[dep.getOrdonnee() + dir][dep.getAbscisse()];
 
 		if (!inter.isOccupe() || inter.getPion().getColor() != Kono.joueur) { return false; }
@@ -76,6 +88,8 @@ public class Plateau extends JPanel {
     		arr.setPion(dep.getPion());
     		dep.setPion(null);
     		Kono.etat = 0;
+
+			changePlayer();
     	}
     	Kono.nbCoupSansPrise++;
         Fenetre.boutonAnnuler.setEnabled(true);
