@@ -14,7 +14,7 @@ public class Case extends JButton implements ActionListener {
     private int ordonnee;
 
 
-    public Case(Color couleur, int abs, int ord, int typeCase) {
+    public Case(Color couleur, int ord, int abs, int typeCase) {
 		couleurFond = couleur;
 		this.setBackground(couleur);
 		this.setPreferredSize(new Dimension(100, 100));
@@ -23,8 +23,7 @@ public class Case extends JButton implements ActionListener {
 		this.typeCase = typeCase;
 
 		// ?
-		occupe = false;
-		pion = null;
+		occupe = true;
 
 		addActionListener(this);
     }
@@ -57,7 +56,7 @@ public class Case extends JButton implements ActionListener {
 		occupe = true;
 
 		// Interface logic
-		try {
+		if (p != null) {
 			if (p.getColor() == CouleurPion.BLANC) {
 				imagePion = new ImageIcon("./img/guepard.png");
 				this.setIcon(imagePion);
@@ -65,10 +64,11 @@ public class Case extends JButton implements ActionListener {
 				imagePion = new ImageIcon("./img/zebre.png");
 				this.setIcon(imagePion);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Import problem (image)");
-			JOptionPane.showMessageDialog(this, "Erreur lors du chargement de l'image du pion.", "Erreur", JOptionPane.ERROR_MESSAGE);
+		} else {
+			this.pion = null;
+			this.occupe = false;
+			imagePion = null;
+			this.setIcon(imagePion);
 		}
 	}
 
@@ -85,14 +85,18 @@ public class Case extends JButton implements ActionListener {
     }
 
     public boolean isOccupe() {
-		return (pion != null);
+		return occupe;
     }
 
 	public void actionPerformed(ActionEvent e) {
 		if (Kono.etat == 0) {
 			Fenetre.boutonAnnuler.setEnabled(false);
 
+			System.out.println("Nombre de coup(s) sans prise : " + Kono.nbCoupSansPrise);
+
 			Kono.caseDep = ((Case) e.getSource());
+
+			System.out.println("caseDep coords: ord = " + Kono.caseDep.getAbscisse() + " abs = " + Kono.caseDep.getOrdonnee());
 
 			// Is the case occuped?
 			if (Kono.caseDep.isOccupe()) {
@@ -107,6 +111,8 @@ public class Case extends JButton implements ActionListener {
 				Kono.caseDep.setBorder(Kono.redline);
 				Kono.caseDep.setBorder(Kono.empty);
 
+				System.out.println("caseArr coords: ord = " + Kono.caseArr.getAbscisse() + " abs = " + Kono.caseArr.getOrdonnee());
+
 				boolean finPartieBloque = false;
 				boolean finPartieNbPion = false;
 				boolean finPartieSansPrise = false;
@@ -120,18 +126,16 @@ public class Case extends JButton implements ActionListener {
 						// Si c'est un déplacement simple
 						Kono.caseDep.setBorder(null);
 						// 1. On déplace le pion
-						Kono.unPlateau.jouerCoup(Kono.caseDep,Kono.caseArr);
+						Kono.unPlateau.jouerCoup(Kono.caseDep, Kono.caseArr);
 
 						if (Kono.nbCoupSansPrise == 25) {
 		    				finPartieSansPrise = true;
 						}
 
 						// 3. On vérifie que le prochain joueur pourra jouer
-						if (Kono.unPlateau.testDeplacement() == false) {
+						if (Kono.unPlateau.testDeplacement()) {
 							finPartieBloque = true;
 						}
-
-						Kono.joueur = (Kono.joueur == CouleurPion.BLANC) ? CouleurPion.NOIR : CouleurPion.BLANC;
 					} else {
 						if (Kono.unPlateau.coupValide(Kono.caseDep, Kono.caseArr) == 2) {
 							// Si c'est un déplacement avec prise
@@ -145,12 +149,11 @@ public class Case extends JButton implements ActionListener {
 							}
 
 							// 3. On vérifie que le prochain joueur pourra jouer
-							if (Kono.unPlateau.testDeplacement() == false) {
+							/* if (Kono.unPlateau.testDeplacement() == false) {
 								finPartieBloque = true;
-							}
+							} */
 
 							Kono.joueur = (Kono.joueur == CouleurPion.BLANC) ? CouleurPion.NOIR : CouleurPion.BLANC;
-							// Kono.etat = 0;
 						} else {
 							// La case d'arrivée sélectionnée n'est pas valide
 							if (Kono.caseArr.getPion() != null) {
@@ -216,8 +219,4 @@ public class Case extends JButton implements ActionListener {
     public String toString() {
         return "";
     }
-
-	public static void main(String[] args) {
-
-	}
 }
